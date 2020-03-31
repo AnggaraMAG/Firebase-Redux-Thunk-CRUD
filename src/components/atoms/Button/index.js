@@ -9,5 +9,4 @@ const Button = ({ onClick, title, loading }) => {
     </button>
   );
 };
-
 export default Button;
