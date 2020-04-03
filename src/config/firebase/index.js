@@ -1,7 +1,7 @@
 import firebase from "firebase/app";
 import "firebase/auth";
-// import "firebase/firestore";
-var firebaseConfig = {
+import "firebase/database";
+const firebaseConfig = {
   apiKey: "AIzaSyCnWRN6KtnY5SyEefiu6MqbyzlExX5Fzh4",
   authDomain: "todolist-5f16f.firebaseapp.com",
   databaseURL: "https://todolist-5f16f.firebaseio.com",
@@ -13,5 +13,8 @@ var firebaseConfig = {
 };
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
+
+// Get a reference to the database service
+export const database = firebase.database();
 
 export default firebase;

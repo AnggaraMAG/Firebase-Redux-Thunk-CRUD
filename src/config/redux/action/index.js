@@ -1,4 +1,4 @@
-import firebase from "../../firebase";
+import firebase, { database } from "../../firebase";
 export const registerUserApi = data => dispatch => {
   return new Promise((resolve, reject) => {
     dispatch({ type: "CHANGE_ISLOADING", value: true });
@@ -32,12 +32,13 @@ export const loginUserApi = data => dispatch => {
         const dataUser = {
           email: res.user.email,
           uid: res.user.uid,
-          emailVerified: res.user.emailVerified
+          emailVerified: res.user.emailVerified,
+          refreshToken: res.user.refreshToken
         };
         dispatch({ type: "CHANGE_ISLOADING", value: false });
         dispatch({ type: "CHANGE_ISLOGIN", value: true });
         dispatch({ type: "CHANGE_USER", value: dataUser });
-        resolve(true);
+        resolve(dataUser);
       })
       .catch(function(error) {
         // Handle Errors here.
@@ -50,3 +51,15 @@ export const loginUserApi = data => dispatch => {
       });
   });
 };
+
+export const addDataToAPI = data => dispatch => {
+  database.ref("notes/" + data.userId).push({
+    title: data.title,
+    content: data.content,
+    data: data.date
+  });
+};
+
+// export const getDataFromAPI = (userId) => (dispatch) {
+//   const userNotes = database.ref('notes/' +userId)
+// }
