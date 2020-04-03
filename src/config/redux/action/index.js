@@ -60,6 +60,21 @@ export const addDataToAPI = data => dispatch => {
   });
 };
 
-// export const getDataFromAPI = (userId) => (dispatch) {
-//   const userNotes = database.ref('notes/' +userId)
-// }
+export const getDataFromAPI = userId => dispatch => {
+  const userNotes = database.ref("notes/" + userId);
+  return new Promise((resolve, reject) => {
+    userNotes.on("value", function(snapshot) {
+      console.log("get data ==>", snapshot.val());
+      const data = [];
+      //merubah object menjadi array
+      Object.keys(snapshot.val()).map(key => {
+        data.push({
+          id: key,
+          data: snapshot.val()[key]
+        });
+      });
+      dispatch({ type: "SET_NOTES", value: data });
+      resolve(snapshot.val());
+    });
+  });
+};
