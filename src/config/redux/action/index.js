@@ -64,7 +64,7 @@ export const getDataFromAPI = userId => dispatch => {
   const userNotes = database.ref("notes/" + userId);
   return new Promise((resolve, reject) => {
     userNotes.on("value", function(snapshot) {
-      console.log("get data ==>", snapshot.val());
+      // console.log("get data ==>", snapshot.val());
       const data = [];
       //merubah object menjadi array
       Object.keys(snapshot.val()).map(key => {
@@ -78,3 +78,20 @@ export const getDataFromAPI = userId => dispatch => {
     });
   });
 };
+
+export const updateDataAPI = (data) => (dispatch) => {
+  const userNotes = database.ref(`notes/${data.userId}/${data.noteId}`);
+  return new Promise((resolve,reject)=> {
+    userNotes.set({
+    title: data.title,
+    content: data.content,
+    data: data.date
+  },(err) => {
+      if(err){
+        reject(false)
+      }else{
+        resolve(true)
+      }
+    })
+  })
+}
