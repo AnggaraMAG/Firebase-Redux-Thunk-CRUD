@@ -2,7 +2,12 @@ import React, { Component, Fragment } from "react";
 import "./Dashboard.scss";
 import { connect } from "react-redux";
 
-import { addDataToAPI, getDataFromAPI,updateDataAPI } from "../../../config/redux/action";
+import {
+  addDataToAPI,
+  getDataFromAPI,
+  updateDataAPI,
+  deleteDataAPI,
+} from "../../../config/redux/action";
 
 class Dashboard extends Component {
   state = {
@@ -10,8 +15,8 @@ class Dashboard extends Component {
     content: "",
     date: "",
     sortType: "desc",
-    textButton:"SIMPAN",
-    noteId: ''
+    textButton: "SIMPAN",
+    noteId: "",
   };
 
   componentDidMount() {
@@ -19,8 +24,8 @@ class Dashboard extends Component {
     this.props.getNotes(userData.uid);
   }
   handleSaveNote = () => {
-    const { title, content,noteId,textButton} = this.state;
-    const { saveNotes,updateNotes } = this.props;
+    const { title, content, noteId, textButton } = this.state;
+    const { saveNotes, updateNotes } = this.props;
     const userData = JSON.parse(localStorage.getItem("userData"));
     const data = {
       title: title,
@@ -28,11 +33,11 @@ class Dashboard extends Component {
       date: new Date().getTime(),
       userId: userData.uid,
     };
-    if(textButton === 'SIMPAN') {
-    saveNotes(data);
-    }else{
-      data.noteId = noteId
-      updateNotes(data)
+    if (textButton === "SIMPAN") {
+      saveNotes(data);
+    } else {
+      data.noteId = noteId;
+      updateNotes(data);
     }
   };
 
@@ -44,24 +49,36 @@ class Dashboard extends Component {
 
   updateNotes = (note) => {
     this.setState({
-      title:note.data.title,
-      content:note.data.content,
-      textButton:'UPDATE',
-      noteId:note.id
-    })
+      title: note.data.title,
+      content: note.data.content,
+      textButton: "UPDATE",
+      noteId: note.id,
+    });
   };
 
   cancelUpdate = () => {
     this.setState({
-      title:'',
-      content:'',
-      textButton:'SIMPAN'
-    })
-  }
+      title: "",
+      content: "",
+      textButton: "SIMPAN",
+    });
+  };
+
+  handleDelete = (e, note) => {
+    e.stopPropagation();
+    const { deleteNote } = this.props;
+    const userData = JSON.parse(localStorage.getItem("userData"));
+    const data = {
+      userId: userData.uid,
+      noteId: note.id,
+    };
+    deleteNote(data);
+    // alert("haiii");
+  };
   render() {
-    const { title, content, sortType,textButton } = this.state;
+    const { title, content, sortType, textButton } = this.state;
     const { notes } = this.props;
-    const { updateNotes ,cancelUpdate} = this;
+    const { updateNotes, cancelUpdate, handleDelete } = this;
 
     const sorted = notes.sort((a, b) => {
       const isReserved = sortType === "asc" ? 1 : -1;
@@ -86,14 +103,12 @@ class Dashboard extends Component {
             onChange={this.handleInput}
           />
           <div className="action-wrapper">
-          {
-            textButton === 'UPDATE' ? (
-              <button className="save-btn cancel" onClick={this.handleSaveNote} onClick={cancelUpdate}>
+            {textButton === "UPDATE" ? (
+              <button className="save-btn cancel" onClick={cancelUpdate}>
                 Cancel
               </button>
-            ):null
-          }
-          {''}
+            ) : null}
+            {""}
             <button className="save-btn" onClick={this.handleSaveNote}>
               {textButton}
             </button>
@@ -112,6 +127,12 @@ class Dashboard extends Component {
                   <p className="title">{note.data.title}</p>
                   <p className="date">{note.data.data}</p>
                   <p className="content">{note.data.content}</p>
+                  <div
+                    className="delete-btn"
+                    onClick={(e) => handleDelete(e, note)}
+                  >
+                    x
+                  </div>
                 </div>
               );
             })}
@@ -131,5 +152,6 @@ const reduxDispatch = (dispatch) => ({
   saveNotes: (data) => dispatch(addDataToAPI(data)),
   getNotes: (data) => dispatch(getDataFromAPI(data)),
   updateNotes: (data) => dispatch(updateDataAPI(data)),
+  deleteNote: (data) => dispatch(deleteDataAPI(data)),
 });
 export default connect(reduxState, reduxDispatch)(Dashboard);

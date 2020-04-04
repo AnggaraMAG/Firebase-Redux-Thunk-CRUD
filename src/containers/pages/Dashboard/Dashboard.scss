@@ -55,15 +55,17 @@
             outline: none;
             background: #eaeaea;
             box-shadow: -5px 5px 10px #adadad, 5px -5px 10px #ffffff;
-            &.cancel{
-                border:1px solid #b1b1b1;
+
+            &.cancel {
+                border: 1px solid #b1b1b1;
                 color: black;
             }
         }
-        action-wrapper{
-            display:flex;
-            justify-content:space-beetween;
-            width:40%;
+
+        action-wrapper {
+            display: flex;
+            justify-content: space-beetween;
+            width: 40%;
         }
     }
 
@@ -76,6 +78,7 @@
         background: #eaeaea;
         box-shadow: -5px 5px 10px #adadad, 5px -5px 10px #ffffff;
         transition: all ease 0.35s;
+        position: relative;
 
         &:hover {
             cursor: pointer;
@@ -99,6 +102,25 @@
         .content {
             margin-top: 20px;
             font-size: 14px;
+        }
+
+        .delete-btn {
+            width: 30px;
+            height: 30px;
+            background: red;
+            border-radius: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            color: white;
+            position: absolute;
+            top: -15px;
+            right: 15px;
+
+            &:hover {
+                cursor: pointer;
+            }
         }
     }
 }
